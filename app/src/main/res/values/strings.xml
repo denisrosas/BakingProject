@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Baking Project</string>
+    <string name="check_internet">Please check your Internet Connection</string>
+</resources>

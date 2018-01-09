@@ -30,4 +30,24 @@ public class RecipeDetails {
         return id;
     }
 
+
+    public String getName() {
+        return name;
+    }
+
+    public ArrayList<Ingredient> getIngredientList() {
+        return ingredientList;
+    }
+
+    public ArrayList<RecipeStep> getRecipeSteps() {
+        return recipeSteps;
+    }
+
+    public int getServing() {
+        return serving;
+    }
+
+    public String getImage() {
+        return image;
+    }
 }

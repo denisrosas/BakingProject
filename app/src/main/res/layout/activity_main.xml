@@ -7,17 +7,12 @@
     android:layout_height="match_parent"
     tools:context="com.example.android.bakingproject.MainActivity" >
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!"
-        android:id="@+id/textView1" />
-
-    <Button
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_recipes_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/button_increase"
-        android:layout_below="@+id/textView1"
-        android:text="Ta zerado!!!"/>
+        android:scrollbars="vertical">
+
+    </android.support.v7.widget.RecyclerView>
 
 </RelativeLayout>

@@ -1,48 +1,52 @@
 package com.example.android.bakingproject;
 
+import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.widget.Button;
-import android.widget.TextView;
+import android.view.Display;
+import android.widget.Toast;
 
 import com.example.android.bakingproject.Network.NetworkUtils;
 import com.example.android.bakingproject.Recipes.RecipeDetails;
+import com.example.android.bakingproject.Recipes.RecipeListAdapter;
 import com.example.android.bakingproject.Recipes.RecipesFromJson;
 
 import java.util.ArrayList;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<ArrayList<RecipeDetails>> {
 
     private static final int LOADER_PARSE_RECIPES_FROM_JSON = 100;
     public static ArrayList<RecipeDetails> globalRecipeDetailsList;
+    RecyclerView mRecycleView;
+    public static boolean isTablet = false;
 
-    @BindView(R.id.textView1)TextView textView;
-    //@BindView(R.id.button_increase) Button button;
-
-    int valor = 0;
+    private static final int GRIDLAYOUT_TABLET_COLUMNS = 3;
+    private static final int GRIDLAYOUT_PHONE_COLUMNS = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        ButterKnife.bind(this);
+        isDeviceATablet();
 
         startLoaderTask(LOADER_PARSE_RECIPES_FROM_JSON);
     }
 
-    @OnClick(R.id.button_increase)
-    public void increaseNumber(Button localButton){
-        valor++;
-        localButton.setText("Novo valor "+valor);
-        Log.i("denis","ta passando aqui");
+    private void isDeviceATablet(){
+
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        if(size.x<=600)
+            isTablet=true;
+        else
+            isTablet=false;
     }
 
     private void startLoaderTask(int loaderId){
@@ -70,11 +74,43 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     }
 
     @Override
-    public void onLoadFinished(Loader<ArrayList<RecipeDetails>> loader, ArrayList<RecipeDetails> data) {
+    public void onLoadFinished(Loader<ArrayList<RecipeDetails>> loader, ArrayList<RecipeDetails> recipeList) {
+
+        //GridLayoutManager layoutManager;
+        LinearLayoutManager layoutManager;
+
+        Log.i("denis","onLoadFinished(). Tamanho da recipeList: "+recipeList.size());
+        Log.i("denis", "isTablet: "+isTablet);
 
         if(loader.getId()==LOADER_PARSE_RECIPES_FROM_JSON)
-            globalRecipeDetailsList = data;
+            globalRecipeDetailsList = recipeList;
 
+        if(recipeList.size()==0){
+            Toast.makeText(this,getString(R.string.check_internet), Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        mRecycleView = (RecyclerView) findViewById(R.id.rv_recipes_list);
+        if(isTablet)
+            //layoutManager = new GridLayoutManager(this, GRIDLAYOUT_TABLET_COLUMNS);
+            layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        else
+            //layoutManager = new GridLayoutManager(this, GRIDLAYOUT_PHONE_COLUMNS);
+            layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        mRecycleView.setLayoutManager(layoutManager);
+        mRecycleView.setHasFixedSize(true);
+
+        mRecycleView.setAdapter(new RecipeListAdapter(getRecipeNameList(), this));
+    }
+
+    private ArrayList<String> getRecipeNameList() {
+        ArrayList<String> recipeNames = new ArrayList<>();
+        for(RecipeDetails recipeDetails: globalRecipeDetailsList){
+            recipeNames.add(recipeDetails.getName());
+        }
+        return recipeNames;
     }
 
     @Override

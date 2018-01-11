@@ -3,11 +3,11 @@ package com.example.android.bakingproject;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-public class RecipeDetails extends AppCompatActivity {
+public class StepsAndStepDetailsActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_recipe_details);
+        setContentView(R.layout.activity_steps_and_step_details);
     }
 }

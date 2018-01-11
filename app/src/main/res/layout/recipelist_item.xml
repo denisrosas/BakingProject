@@ -3,6 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
+    <!--usado pelo recyclerview para inflar as receitas-->
+
     <Button
         android:id="@+id/recipe_button"
         android:layout_marginTop="5dp"

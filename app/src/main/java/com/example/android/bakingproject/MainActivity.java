@@ -1,6 +1,5 @@
 package com.example.android.bakingproject;
 
-import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
@@ -8,7 +7,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.Display;
 import android.widget.Toast;
 
 import com.example.android.bakingproject.Network.NetworkUtils;
@@ -23,7 +21,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private static final int LOADER_PARSE_RECIPES_FROM_JSON = 100;
     public static ArrayList<RecipeDetails> globalRecipeDetailsList;
     RecyclerView mRecycleView;
-    public static boolean isTablet = false;
+    public static boolean mTwoPaneMode = false;
 
     private static final int GRIDLAYOUT_TABLET_COLUMNS = 3;
     private static final int GRIDLAYOUT_PHONE_COLUMNS = 1;
@@ -33,20 +31,16 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        isDeviceATablet();
+        isTwoPaneMode();
 
         startLoaderTask(LOADER_PARSE_RECIPES_FROM_JSON);
     }
 
-    private void isDeviceATablet(){
-
-        Display display = getWindowManager().getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        if(size.x<=600)
-            isTablet=true;
+    private void isTwoPaneMode(){
+        if(findViewById(R.id.rl_mainactivity_tablet) != null)
+            mTwoPaneMode =true;
         else
-            isTablet=false;
+            mTwoPaneMode =false;
     }
 
     private void startLoaderTask(int loaderId){
@@ -80,7 +74,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         LinearLayoutManager layoutManager;
 
         Log.i("denis","onLoadFinished(). Tamanho da recipeList: "+recipeList.size());
-        Log.i("denis", "isTablet: "+isTablet);
+        Log.i("denis", "mTwoPaneMode: "+ mTwoPaneMode);
 
         if(loader.getId()==LOADER_PARSE_RECIPES_FROM_JSON)
             globalRecipeDetailsList = recipeList;
@@ -91,7 +85,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         }
 
         mRecycleView = (RecyclerView) findViewById(R.id.rv_recipes_list);
-        if(isTablet)
+        if(mTwoPaneMode)
             //layoutManager = new GridLayoutManager(this, GRIDLAYOUT_TABLET_COLUMNS);
             layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         else
@@ -118,4 +112,4 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         //do nothing
     }
 
-}
+ }

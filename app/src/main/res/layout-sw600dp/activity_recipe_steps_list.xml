@@ -6,10 +6,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal"
-    tools:context="com.example.android.bakingproject.StepsAndStepDetailsActivity">
+    tools:context="com.example.android.bakingproject.RecipeStepsListActivity">
 
-    <fragment
-        android:id="@+id/steps_list_fragment"
+    <FrameLayout
+        android:id="@+id/steps_list_container"
+        android:name="com.example.android.bakingproject.Recipes.RecipeStepsFragment"
         android:layout_width="400dp"
         android:layout_height="match_parent" />
 
@@ -18,8 +19,9 @@
         android:layout_height="match_parent"
         android:background="@android:color/darker_gray" />
 
-    <fragment
-        android:id="@+id/step_details_fragment"
+    <FrameLayout
+        android:id="@+id/steps_details_container"
+        android:name="com.example.android.bakingproject.Recipes.RecipeStepDetailsFragment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 

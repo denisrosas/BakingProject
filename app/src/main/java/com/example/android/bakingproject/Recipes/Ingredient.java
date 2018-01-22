@@ -1,9 +1,5 @@
 package com.example.android.bakingproject.Recipes;
 
-/**
- * Created by Denis on 08/01/2018.
- */
-
 public class Ingredient {
     private final float quantity;
     private final String measure;
@@ -16,4 +12,15 @@ public class Ingredient {
     }
 
 
+    public float getQuantity() {
+        return quantity;
+    }
+
+    public String getMeasure() {
+        return measure;
+    }
+
+    public String getIngredientName() {
+        return ingredientName;
+    }
 }

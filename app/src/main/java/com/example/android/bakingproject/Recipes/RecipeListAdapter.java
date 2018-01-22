@@ -1,15 +1,16 @@
 package com.example.android.bakingproject.Recipes;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.Toast;
 
 import com.example.android.bakingproject.R;
+import com.example.android.bakingproject.RecipeStepsListActivity;
 
 import java.util.ArrayList;
 
@@ -17,6 +18,7 @@ public class RecipeListAdapter extends RecyclerView.Adapter <RecipeListAdapter.R
 
     private final ArrayList<String> recipes_names;
     private Context activityContext;
+    static final String RECIPE_ID = "RECIPE_ID";
 
     public RecipeListAdapter(ArrayList<String> recipes_names, Context activityContext) {
         this.recipes_names = recipes_names;
@@ -32,7 +34,7 @@ public class RecipeListAdapter extends RecyclerView.Adapter <RecipeListAdapter.R
     }
 
     @Override
-    public void onBindViewHolder(RecipeViewHolder holder, int position) {
+    public void onBindViewHolder(final RecipeViewHolder holder, final int position) {
 
         Log.i("denis","onBindViewHolder() - passou aqui. position: "+position);
 
@@ -42,7 +44,10 @@ public class RecipeListAdapter extends RecyclerView.Adapter <RecipeListAdapter.R
         holder.button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(activityContext, "chamar a activity RecipeDetails", Toast.LENGTH_LONG).show();
+                //Toast.makeText(activityContext, "chamar a activity RecipeDetails", Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(activityContext, RecipeStepsListActivity.class);
+                activityContext.startActivity(intent);
+
             }
         });
 

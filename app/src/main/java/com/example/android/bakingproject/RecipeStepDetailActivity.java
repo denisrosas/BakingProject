@@ -19,11 +19,12 @@ public class RecipeStepDetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_recipe_step_detail);
 
         Intent intent = getIntent();
-        int recipeID = intent.getIntExtra(RECIPE_ID, 0);
+        int recipeId = intent.getIntExtra(RECIPE_ID, 0);
         int stepId = intent.getIntExtra(STEP_ID, 0);
 
-        recipeStep = MainActivity.globalRecipeDetailsList.get(recipeID).getRecipeSteps().get(stepId);
+        recipeStep = MainActivity.globalRecipeDetailsList.get(recipeId).getRecipeSteps().get(stepId);
 
+        Log.i("denis", "recipeID: "+recipeId+"\n stepId: "+stepId);
         Log.i("denis", "recipe Description: "+recipeStep.getDescription()+"\n videoURL: "+recipeStep.getVideoURL());
     }
 }

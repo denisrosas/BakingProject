@@ -11,7 +11,6 @@ public class Ingredient {
         this.ingredientName = ingredientName;
     }
 
-
     public float getQuantity() {
         return quantity;
     }

@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.android.bakingproject.RecipeStepDetailActivity">
+    android:orientation="vertical"
+    tools:context="com.example.android.bakingproject.RecipeIngredientsListActivity">
 
     <FrameLayout
-        android:id="@+id/steps_details_container"
-        android:name="com.example.android.bakingproject.Recipes.RecipeStepDetailsFrasgment"
+        android:id="@+id/ingredients_list_container"
+
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

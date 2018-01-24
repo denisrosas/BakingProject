@@ -46,6 +46,7 @@ public class RecipeListAdapter extends RecyclerView.Adapter <RecipeListAdapter.R
             public void onClick(View view) {
                 //Toast.makeText(activityContext, "chamar a activity RecipeDetails", Toast.LENGTH_LONG).show();
                 Intent intent = new Intent(activityContext, RecipeStepsListActivity.class);
+                intent.putExtra(RECIPE_ID, position);
                 activityContext.startActivity(intent);
 
             }
@@ -55,7 +56,7 @@ public class RecipeListAdapter extends RecyclerView.Adapter <RecipeListAdapter.R
 
     @Override
     public int getItemCount() {
-        Log.i("denis", "getItemCount(): "+recipes_names.size());
+        //Log.i("denis", "getItemCount(): "+recipes_names.size());
         return recipes_names.size();
     }
 

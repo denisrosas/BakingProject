@@ -23,9 +23,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     RecyclerView mRecycleView;
     public static boolean mTwoPaneMode = false;
 
-    private static final int GRIDLAYOUT_TABLET_COLUMNS = 3;
-    private static final int GRIDLAYOUT_PHONE_COLUMNS = 1;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

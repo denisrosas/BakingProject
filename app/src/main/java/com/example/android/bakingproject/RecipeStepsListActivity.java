@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.Toast;
 
 import com.example.android.bakingproject.Recipes.RecipeStep;
 import com.example.android.bakingproject.Recipes.RecipeStepsFragment;
@@ -76,10 +75,17 @@ public class RecipeStepsListActivity extends AppCompatActivity implements Recipe
 
         } else {
             //TODO - se position for 0, carregar a acitivy de ingredientes. se 1 ou mais, carregar o RecipeStepDetailActivity
-            Toast.makeText(this, "posicao: "+position, Toast.LENGTH_LONG).show();
-//            Intent intent = new Intent(this, RecipeStepDetailActivity.class);
-//            intent.putExtra(STEP_ID, position);
-//            intent.putExtra(RECIPE_ID, recipeId);
+            if(position==0){
+                Intent intent = new Intent(this, RecipeIngredientsListActivity.class);
+                intent.putExtra(RECIPE_ID, (recipeId));
+                startActivity(intent);
+            } else {
+                //Toast.makeText(this, "posicao: " + position, Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(this, RecipeStepDetailActivity.class);
+                intent.putExtra(STEP_ID, (position-1));
+                intent.putExtra(RECIPE_ID, (recipeId));
+                startActivity(intent);
+            }
         }
 
     }

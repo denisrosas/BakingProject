@@ -1,17 +1,21 @@
 package com.example.android.bakingproject;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AppCompatActivity;
 
-import com.example.android.bakingproject.Recipes.RecipeStep;
+import com.example.android.bakingproject.Recipes.RecipeStepDetailsFragment;
+
+import static com.example.android.bakingproject.MainActivity.globalRecipeDetailsList;
 
 public class RecipeStepDetailActivity extends AppCompatActivity {
 
     static final String RECIPE_ID = "RECIPE_ID";
     static final String STEP_ID = "STEP_ID";
-    RecipeStep recipeStep;
+    static final String STEP_SHORT_DESCRIPTION = "STEP_SHORT_DESCRIPTION";
+    static final String STEP_DESCRIPTION = "STEP_DESCRIPTION";
+    static final String STEP_VIDEO_URL = "STEP_VIDEO_URL";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,9 +26,13 @@ public class RecipeStepDetailActivity extends AppCompatActivity {
         int recipeId = intent.getIntExtra(RECIPE_ID, 0);
         int stepId = intent.getIntExtra(STEP_ID, 0);
 
-        recipeStep = MainActivity.globalRecipeDetailsList.get(recipeId).getRecipeSteps().get(stepId);
+        RecipeStepDetailsFragment stepDetailsFragment = new RecipeStepDetailsFragment();
+        stepDetailsFragment.setRecipeStep(globalRecipeDetailsList.get(recipeId).getRecipeSteps().get(stepId));
 
-        Log.i("denis", "recipeID: "+recipeId+"\n stepId: "+stepId);
-        Log.i("denis", "recipe Description: "+recipeStep.getDescription()+"\n videoURL: "+recipeStep.getVideoURL());
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction()
+                .add(R.id.steps_details_container, stepDetailsFragment)
+                .commit();
     }
+
 }

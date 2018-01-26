@@ -30,7 +30,6 @@ public class RecipeIngredientsListActivity extends AppCompatActivity {
 
         IngredientsFragment ingredientsFragment = new IngredientsFragment();
         ingredientsFragment.setIngredientsList(readableIngredientList);
-        ingredientsFragment.setActivityContext(this);
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
@@ -39,7 +38,7 @@ public class RecipeIngredientsListActivity extends AppCompatActivity {
 
     }
 
-    private ArrayList<String> returnReadableIngredientList(ArrayList<Ingredient> ingredientList) {
+    public static ArrayList<String> returnReadableIngredientList(ArrayList<Ingredient> ingredientList) {
 
         String quantity;
         String medida;

@@ -1,15 +1,19 @@
 package com.example.android.bakingproject;
 
-import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 
+import com.example.android.bakingproject.Recipes.IngredientsFragment;
 import com.example.android.bakingproject.Recipes.RecipeStep;
+import com.example.android.bakingproject.Recipes.RecipeStepDetailsFragment;
 import com.example.android.bakingproject.Recipes.RecipeStepsFragment;
 
 import java.util.ArrayList;
+
+import static com.example.android.bakingproject.MainActivity.globalRecipeDetailsList;
+import static com.example.android.bakingproject.RecipeIngredientsListActivity.returnReadableIngredientList;
 
 public class RecipeStepsListActivity extends AppCompatActivity implements RecipeStepsFragment.OnStepClickListener {
 
@@ -27,8 +31,8 @@ public class RecipeStepsListActivity extends AppCompatActivity implements Recipe
         recipeId = i.getIntExtra(RECIPE_ID, 0);
 
         RecipeStepsFragment recipeStepsFragment = new RecipeStepsFragment();
+        recipeStepsFragment.setRecipeName(globalRecipeDetailsList.get(recipeId).getName());
         recipeStepsFragment.setRecipeStepNames(getStepListFromGlobal(recipeId));
-        recipeStepsFragment.setActivityContext(this);
 
         FragmentManager fragmentManager = getSupportFragmentManager();
 
@@ -36,15 +40,22 @@ public class RecipeStepsListActivity extends AppCompatActivity implements Recipe
                 .add(R.id.steps_list_container, recipeStepsFragment)
                 .commit();
 
-    }
+        if(MainActivity.mTwoPaneMode){
+            ArrayList<String> readableIngredientList = returnReadableIngredientList(globalRecipeDetailsList.
+                    get(recipeId).getIngredientList());
 
-    @Override
-    public void onAttachFragment(Fragment fragment) {
-        super.onAttachFragment(fragment);
+            IngredientsFragment ingredientsFragment = new IngredientsFragment();
+            ingredientsFragment.setIngredientsList(readableIngredientList);
+
+            fragmentManager.beginTransaction()
+                    .add(R.id.steps_details_container, ingredientsFragment)
+                    .commit();
+        }
+
     }
 
     private ArrayList<String> getStepListFromGlobal(int recipeId){
-        ArrayList<RecipeStep> recipeSteps = MainActivity.globalRecipeDetailsList.get(recipeId).getRecipeSteps();
+        ArrayList<RecipeStep> recipeSteps = globalRecipeDetailsList.get(recipeId).getRecipeSteps();
         ArrayList<String> recipeStepList = new ArrayList<>();
 
         //Ingredients list will be the first item.
@@ -60,18 +71,31 @@ public class RecipeStepsListActivity extends AppCompatActivity implements Recipe
     @Override
     public void onStepSelected(int position) {
 
-        if(MainActivity.mTwoPaneMode == true){
-            //criar uma classe fragment para exibir o video no exoplayer e a descrição dos passos
-            //criar uma instancia dessa classe
-            // e substittuir o fragment antigo por esse. Exemplo abaixo:
+        if(MainActivity.mTwoPaneMode){
 
-//            BodyPartFragment newFragment = new BodyPartFragment();
-//            newFragment.setImageIds(AndroidImageAssets.getHeads());
-//            newFragment.setListIndex(listIndex);
-//            // Replace the old head fragment with a new one
-//            getSupportFragmentManager().beginTransaction()
-//                    .replace(R.id.head_container, newFragment)
-//                    .commit();
+            if(position==0){
+
+                ArrayList<String> readableIngredientList = returnReadableIngredientList(globalRecipeDetailsList.
+                        get(recipeId).getIngredientList());
+
+                IngredientsFragment ingredientsFragment = new IngredientsFragment();
+                ingredientsFragment.setIngredientsList(readableIngredientList);
+
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                fragmentManager.beginTransaction()
+                        .replace(R.id.steps_details_container, ingredientsFragment)
+                        .commit();
+            } else {
+
+                RecipeStepDetailsFragment stepDetailsFragment = new RecipeStepDetailsFragment();
+                stepDetailsFragment.setRecipeStep(globalRecipeDetailsList.get(recipeId).getRecipeSteps().get(position-1));
+
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                fragmentManager.beginTransaction()
+                        .replace(R.id.steps_details_container, stepDetailsFragment)
+                        .commit();
+
+            }
 
         } else {
             //TODO - se position for 0, carregar a acitivy de ingredientes. se 1 ou mais, carregar o RecipeStepDetailActivity

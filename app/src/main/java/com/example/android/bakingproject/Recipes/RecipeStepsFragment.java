@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.example.android.bakingproject.R;
 
@@ -19,9 +20,14 @@ public class RecipeStepsFragment extends Fragment {
 
     OnStepClickListener mCallBack;
     ArrayList<String> recipeStepNames = new ArrayList<>();
-    Context activityContext;
+    private String recipeName;
+
 
     public RecipeStepsFragment(){  //empty constructor
+    }
+
+    public void setRecipeName(String recipeName) {
+        this.recipeName = recipeName;
     }
 
     public interface OnStepClickListener{
@@ -30,10 +36,6 @@ public class RecipeStepsFragment extends Fragment {
 
     public void setRecipeStepNames(ArrayList<String> recipeStepNames1){
         recipeStepNames = recipeStepNames1;
-    }
-
-    public void setActivityContext(Context context){
-        activityContext = context;
     }
 
     @Override
@@ -46,8 +48,12 @@ public class RecipeStepsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_steps_list, container, false);
+
+        TextView textViewRecipeName = rootView.findViewById(R.id.tv_recipe_name);
+        textViewRecipeName.setText(recipeName);
+
         ListView listView = rootView.findViewById(R.id.lv_recipe_steps_list);
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(activityContext, R.layout.textview_stepname, recipeStepNames);
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(rootView.getContext(), R.layout.textview_stepname, recipeStepNames);
         listView.setAdapter(arrayAdapter);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -59,5 +65,4 @@ public class RecipeStepsFragment extends Fragment {
 
         return rootView;
     }
-
 }

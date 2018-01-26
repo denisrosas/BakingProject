@@ -1,6 +1,5 @@
 package com.example.android.bakingproject.Recipes;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -14,14 +13,9 @@ import com.example.android.bakingproject.R;
 
 import java.util.ArrayList;
 
-/**
- * Created by Denis on 24/01/2018.
- */
-
 public class IngredientsFragment extends Fragment {
 
     ArrayList<String> ingredientsList;
-    private Context activityContext;
 
     @Nullable
     @Override
@@ -31,18 +25,13 @@ public class IngredientsFragment extends Fragment {
 
         ListView listView = rootView.findViewById(R.id.lv_ingredients_list);
 
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(activityContext, R.layout.textview_ingredient, ingredientsList);
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(rootView.getContext(), R.layout.textview_ingredient, ingredientsList);
         listView.setAdapter(arrayAdapter);
 
         return rootView;
     }
 
-
     public void setIngredientsList(ArrayList<String> ingredientsList) {
         this.ingredientsList = ingredientsList;
-    }
-
-    public void setActivityContext(Context activityContext) {
-        this.activityContext = activityContext;
     }
 }

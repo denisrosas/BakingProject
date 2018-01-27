@@ -4,12 +4,11 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.android.bakingproject.R;
@@ -18,7 +17,6 @@ import java.util.ArrayList;
 
 public class RecipeStepsFragment extends Fragment {
 
-    OnStepClickListener mCallBack;
     ArrayList<String> recipeStepNames = new ArrayList<>();
     private String recipeName;
 
@@ -30,10 +28,6 @@ public class RecipeStepsFragment extends Fragment {
         this.recipeName = recipeName;
     }
 
-    public interface OnStepClickListener{
-        void onStepSelected(int position);
-    }
-
     public void setRecipeStepNames(ArrayList<String> recipeStepNames1){
         recipeStepNames = recipeStepNames1;
     }
@@ -41,7 +35,6 @@ public class RecipeStepsFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        mCallBack = (OnStepClickListener) context;
     }
 
     @Nullable
@@ -52,16 +45,12 @@ public class RecipeStepsFragment extends Fragment {
         TextView textViewRecipeName = rootView.findViewById(R.id.tv_recipe_name);
         textViewRecipeName.setText(recipeName);
 
-        ListView listView = rootView.findViewById(R.id.lv_recipe_steps_list);
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(rootView.getContext(), R.layout.textview_stepname, recipeStepNames);
-        listView.setAdapter(arrayAdapter);
-
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                mCallBack.onStepSelected(position);
-            }
-        });
+        LinearLayoutManager layoutManager = new LinearLayoutManager(container.getContext(), LinearLayoutManager.VERTICAL, false);
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        RecyclerView recyclerView = rootView.findViewById(R.id.rv_recipe_steps_list);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(new RecipeStepListAdapter(recipeStepNames));
 
         return rootView;
     }

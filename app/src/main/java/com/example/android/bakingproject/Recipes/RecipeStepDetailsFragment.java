@@ -4,6 +4,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,6 +38,7 @@ public class RecipeStepDetailsFragment extends Fragment implements ExoPlayer.Eve
     static final String STEP_SHORT_DESCRIPTION = "STEP_SHORT_DESCRIPTION";
     static final String STEP_DESCRIPTION = "STEP_DESCRIPTION";
     static final String STEP_VIDEO_URL = "STEP_VIDEO_URL";
+    static final String STEP_THUMBNAIL_URL = "STEP_THUMBNAIL_URL";
 
     @Nullable
     @Override
@@ -46,14 +48,22 @@ public class RecipeStepDetailsFragment extends Fragment implements ExoPlayer.Eve
             recipeStep = new RecipeStep(0, savedInstanceState.getString(STEP_SHORT_DESCRIPTION),
                     savedInstanceState.getString(STEP_DESCRIPTION),
                     savedInstanceState.getString(STEP_VIDEO_URL),
-                    "");
+                    savedInstanceState.getString(STEP_THUMBNAIL_URL));
         }
 
         View rootView = inflater.inflate(R.layout.fragment_step_details, container, false);
 
-        if(!recipeStep.getVideoURL().isEmpty()) {
+        if(recipeStep.getVideoURL().startsWith("https://")) {
             mPlayerView = rootView.findViewById(R.id.exoplayer_step_view);
             initializePlayer(Uri.parse(recipeStep.getVideoURL()));
+        }
+        else if (recipeStep.getThumbnailURL().startsWith("https://")){
+            mPlayerView = rootView.findViewById(R.id.exoplayer_step_view);
+            initializePlayer(Uri.parse(recipeStep.getThumbnailURL()));
+        } else {
+            mPlayerView = rootView.findViewById(R.id.exoplayer_step_view);
+            mPlayerView.setVisibility(View.GONE);
+            Log.i("denis","deu false nos dois!!");
         }
 
         TextView textViewStepDescription = rootView.findViewById(R.id.tv_step_description);
@@ -107,6 +117,7 @@ public class RecipeStepDetailsFragment extends Fragment implements ExoPlayer.Eve
         outState.putString(STEP_SHORT_DESCRIPTION, recipeStep.getShortDescription());
         outState.putString(STEP_DESCRIPTION, recipeStep.getDescription());
         outState.putString(STEP_VIDEO_URL, recipeStep.getVideoURL());
+        outState.putString(STEP_THUMBNAIL_URL, recipeStep.getThumbnailURL());
     }
 
 

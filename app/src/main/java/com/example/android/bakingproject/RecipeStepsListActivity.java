@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import com.example.android.bakingproject.Recipes.IngredientsFragment;
 import com.example.android.bakingproject.Recipes.RecipeStep;
 import com.example.android.bakingproject.Recipes.RecipeStepDetailsFragment;
+import com.example.android.bakingproject.Recipes.RecipeStepListAdapter;
 import com.example.android.bakingproject.Recipes.RecipeStepsFragment;
 
 import java.util.ArrayList;
@@ -15,7 +16,7 @@ import java.util.ArrayList;
 import static com.example.android.bakingproject.MainActivity.globalRecipeDetailsList;
 import static com.example.android.bakingproject.RecipeIngredientsListActivity.returnReadableIngredientList;
 
-public class RecipeStepsListActivity extends AppCompatActivity implements RecipeStepsFragment.OnStepClickListener {
+public class RecipeStepsListActivity extends AppCompatActivity implements RecipeStepListAdapter.OnStepClickListener {
 
     static final String RECIPE_ID = "RECIPE_ID";
     static final String STEP_ID = "STEP_ID";

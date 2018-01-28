@@ -1,0 +1,61 @@
+<LinearLayout
+    android:id="@+id/ll_widget_container"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/widget_background"
+    android:padding="@dimen/widget_margin"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/ll_next_previous"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_horizontal" >
+
+        <TextView
+            android:id="@+id/tv_previous_recipe"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:textSize="16sp"
+            android:textColor="@color/colorAccent"
+            android:text="@string/previous" />
+
+        <TextView
+            android:id="@+id/tv_next_recipe"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:textSize="16sp"
+            android:textColor="@color/colorAccent"
+            android:text="@string/next" />
+
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/ll_recipe_info_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="8dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_recipe_name_widget"
+            android:textColor="@color/text_black"
+            android:text="@string/recipe_name"
+            android:textSize="20sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/tv_ingredients_list_widget"
+            android:textColor="@color/text_black"
+            android:paddingTop="8dp"
+            android:text="@string/ingredient_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+</LinearLayout>

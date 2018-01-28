@@ -2,4 +2,9 @@
     <string name="app_name">Baking Project</string>
     <string name="check_internet">Please check your Internet Connection</string>
     <string name="ingredient_list">Ingredient List</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
+    <string name="previous">Previous</string>
+    <string name="next">Next</string>
+    <string name="recipe_name">Recipe Name</string>
 </resources>

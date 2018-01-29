@@ -6,7 +6,10 @@ import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.util.Log;
 import android.widget.RemoteViews;
+
+import java.util.ArrayList;
 
 /**
  * Implementation of App Widget functionality.
@@ -36,6 +39,7 @@ public class RecipeWidget extends AppWidgetProvider {
         views.setOnClickPendingIntent(R.id.tv_next_recipe, pendingIntentNext);
 
         int recipe_id = getRecipeIdWidget(context);
+        Log.i("denis", "RecipeWidget - updateAppWidget() - RecipeId: "+recipe_id);
         String recipe_name = MainActivity.globalRecipeDetailsList.get(recipe_id).getName();
         Intent intentIngredientsList;
 
@@ -46,21 +50,29 @@ public class RecipeWidget extends AppWidgetProvider {
         }
         intentIngredientsList.putExtra(RECIPE_ID, recipe_id);
 
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intentIngredientsList, 0);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0,
+                intentIngredientsList, PendingIntent.FLAG_UPDATE_CURRENT);
         views.setOnClickPendingIntent(R.id.tv_recipe_name_widget, pendingIntent);
         views.setTextViewText(R.id.tv_recipe_name_widget, recipe_name);
 
         views.setOnClickPendingIntent(R.id.tv_ingredients_list_widget, pendingIntent);
-        views.setTextViewText(R.id.tv_ingredients_list_widget, getIngredientList());
+        views.setTextViewText(R.id.tv_ingredients_list_widget, getIngredientList(recipe_id));
 
         appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetId, R.id.ll_widget_container);
         appWidgetManager.updateAppWidget(appWidgetId, views);
 
     }
 
-    private static String getIngredientList() {
+    private static String getIngredientList(int recipeId) {
 
-        return "teste\n teste2 \n teste 3";
+        String compiledIngredientsList = "";
+        ArrayList<String> ingredientsList = RecipeIngredientsListActivity.returnReadableIngredientList(MainActivity.globalRecipeDetailsList.get(recipeId).getIngredientList());
+
+        for(String ingredient : ingredientsList){
+            compiledIngredientsList = compiledIngredientsList.concat(ingredient+"\n");
+        }
+
+        return compiledIngredientsList;
     }
 
     @Override

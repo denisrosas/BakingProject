@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import static com.example.android.bakingproject.MainActivity.globalRecipeDetailsList;
 import static com.example.android.bakingproject.RecipeIngredientsListActivity.returnReadableIngredientList;
 
-public class RecipeStepsListActivity extends AppCompatActivity implements RecipeStepListAdapter.OnStepClickListener {
+public class RecipeStepsListActivity extends AppCompatActivity implements RecipeStepListAdapter.OnStepClickListener, RecipeStepDetailsFragment.OnChangeStepClickListener {
 
     static final String RECIPE_ID = "RECIPE_ID";
     static final String STEP_ID = "STEP_ID";
@@ -88,8 +88,11 @@ public class RecipeStepsListActivity extends AppCompatActivity implements Recipe
                         .commit();
             } else {
 
+                int stepId = position-1; //the position 0 is the ingredient list. position 1 == step 0
+
                 RecipeStepDetailsFragment stepDetailsFragment = new RecipeStepDetailsFragment();
-                stepDetailsFragment.setRecipeStep(globalRecipeDetailsList.get(recipeId).getRecipeSteps().get(position-1));
+                stepDetailsFragment.setRecipeStep(globalRecipeDetailsList.get(recipeId).getRecipeSteps().get(stepId));
+                stepDetailsFragment.setRecipeStepIds(recipeId, stepId);
 
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 fragmentManager.beginTransaction()
@@ -112,6 +115,19 @@ public class RecipeStepsListActivity extends AppCompatActivity implements Recipe
                 startActivity(intent);
             }
         }
+    }
 
+    @Override
+    public void onPrevNextStepSelected(int recipeId, int newStepId) {
+        if(MainActivity.mTwoPaneMode){
+            RecipeStepDetailsFragment stepDetailsFragment = new RecipeStepDetailsFragment();
+            stepDetailsFragment.setRecipeStep(globalRecipeDetailsList.get(recipeId).getRecipeSteps().get(newStepId));
+            stepDetailsFragment.setRecipeStepIds(recipeId, newStepId);
+
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.steps_details_container, stepDetailsFragment)
+                    .commit();
+        }
     }
 }

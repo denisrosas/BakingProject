@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 
 import com.example.android.bakingproject.Recipes.Ingredient;
 import com.example.android.bakingproject.Recipes.IngredientsFragment;
@@ -23,7 +24,9 @@ public class RecipeIngredientsListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_recipe_ingredients_list);
 
         Intent intent = getIntent();
-        int recipeId = intent.getIntExtra(RECIPE_ID, 0);
+        intent.getExtras().getInt(RECIPE_ID);
+        int recipeId = intent.getIntExtra(RECIPE_ID, 3);
+        Log.i("denis", "RecipeIngredientsListActivity - RecipeId: "+recipeId);
 
         ArrayList<String> readableIngredientList = returnReadableIngredientList(globalRecipeDetailsList.
                 get(recipeId).getIngredientList());

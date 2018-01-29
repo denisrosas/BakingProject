@@ -28,16 +28,10 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        isTwoPaneMode();
+        //check if device should display in Two-Pane-Mode
+        mTwoPaneMode = findViewById(R.id.rl_mainactivity_tablet) != null;
 
         startLoaderTask(LOADER_PARSE_RECIPES_FROM_JSON);
-    }
-
-    private void isTwoPaneMode(){
-        if(findViewById(R.id.rl_mainactivity_tablet) != null)
-            mTwoPaneMode =true;
-        else
-            mTwoPaneMode =false;
     }
 
     private void startLoaderTask(int loaderId){

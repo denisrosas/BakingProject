@@ -20,4 +20,29 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        
+        <Button
+            android:layout_margin="5dp"
+            android:id="@+id/button_previous_step"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/previous_step"
+            android:layout_gravity="start"/>
+
+        <Button
+            android:layout_margin="5dp"
+            android:id="@+id/button_next_step"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/next_step"
+            android:layout_gravity="end" />
+        
+    </LinearLayout>
+
 </LinearLayout>

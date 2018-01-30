@@ -13,9 +13,15 @@ import com.example.android.bakingproject.R;
 
 import java.util.ArrayList;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class IngredientsFragment extends Fragment {
 
     ArrayList<String> ingredientsList;
+
+    @BindView(R.id.lv_ingredients_list)
+    ListView listView;
 
     @Nullable
     @Override
@@ -23,7 +29,9 @@ public class IngredientsFragment extends Fragment {
 
         View rootView = inflater.inflate(R.layout.fragment_ingredients_list, container, false);
 
-        ListView listView = rootView.findViewById(R.id.lv_ingredients_list);
+        ButterKnife.bind(this, rootView);
+
+        listView = rootView.findViewById(R.id.lv_ingredients_list);
 
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(rootView.getContext(), R.layout.textview_ingredient, ingredientsList);
         listView.setAdapter(arrayAdapter);

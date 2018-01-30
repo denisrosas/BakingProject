@@ -6,14 +6,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
 import com.example.android.bakingproject.R;
 import com.example.android.bakingproject.RecipeStepsListActivity;
 
 import java.util.ArrayList;
 
-public class RecipeListAdapter extends RecyclerView.Adapter <RecipeListAdapter.RecipeViewHolder> {
+public class RecipeListAdapter extends RecyclerView.Adapter <RecipeViewHolder> {
 
     private final ArrayList<String> recipes_names;
     private Context activityContext;
@@ -41,30 +40,17 @@ public class RecipeListAdapter extends RecyclerView.Adapter <RecipeListAdapter.R
         holder.button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Toast.makeText(activityContext, "chamar a activity RecipeDetails", Toast.LENGTH_LONG).show();
                 Intent intent = new Intent(activityContext, RecipeStepsListActivity.class);
                 intent.putExtra(RECIPE_ID, position);
                 activityContext.startActivity(intent);
-
             }
         });
-
     }
 
     @Override
     public int getItemCount() {
         //Log.i("denis", "getItemCount(): "+recipes_names.size());
         return recipes_names.size();
-    }
-
-    class RecipeViewHolder extends RecyclerView.ViewHolder {
-
-        Button button = null;
-
-        RecipeViewHolder(View itemView) {
-            super(itemView);
-            button = itemView.findViewById(R.id.recipe_button);
-        }
     }
 
 }

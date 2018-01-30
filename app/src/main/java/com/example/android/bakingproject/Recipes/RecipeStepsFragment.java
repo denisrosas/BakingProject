@@ -15,10 +15,16 @@ import com.example.android.bakingproject.R;
 
 import java.util.ArrayList;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class RecipeStepsFragment extends Fragment {
 
     ArrayList<String> recipeStepNames = new ArrayList<>();
     private String recipeName;
+
+    @BindView(R.id.rv_recipe_steps_list)
+    RecyclerView recyclerView;
 
 
     public RecipeStepsFragment(){  //empty constructor
@@ -42,12 +48,14 @@ public class RecipeStepsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_steps_list, container, false);
 
+        ButterKnife.bind(this, rootView);
+
         TextView textViewRecipeName = rootView.findViewById(R.id.tv_recipe_name);
         textViewRecipeName.setText(recipeName);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(container.getContext(), LinearLayoutManager.VERTICAL, false);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        RecyclerView recyclerView = rootView.findViewById(R.id.rv_recipe_steps_list);
+        recyclerView = rootView.findViewById(R.id.rv_recipe_steps_list);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(new RecipeStepListAdapter(recipeStepNames));

@@ -1,6 +1,10 @@
 package com.example.android.bakingproject;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.annotation.VisibleForTesting;
+import android.support.test.espresso.IdlingResource;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
@@ -10,6 +14,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.example.android.bakingproject.IndlingResource.SimpleIdlingResource;
 import com.example.android.bakingproject.Network.NetworkUtils;
 import com.example.android.bakingproject.Recipes.RecipeDetails;
 import com.example.android.bakingproject.Recipes.RecipeListAdapter;
@@ -31,10 +36,20 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     public static boolean mTwoPaneMode = false;
 
+    // The Idling Resource which will be null in production.
+    @Nullable
+    private SimpleIdlingResource mIdlingResource;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //will be initialized only if testing
+        if(mIdlingResource!=null) {
+            mIdlingResource.setIdleState(false);
+            Log.i("denis", "essa mesangem deve aparecer somente em testes do espresso");
+        }
 
         ButterKnife.bind(this);
 
@@ -85,12 +100,10 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             return;
         }
 
-        mRecycleView = (RecyclerView) findViewById(R.id.rv_recipes_list);
+        mRecycleView = findViewById(R.id.rv_recipes_list);
         if(mTwoPaneMode)
             layoutManager = new GridLayoutManager(this, GRIDLAYOUT_TABLET_COLUMNS);
-            //layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         else
-            //layoutManager = new GridLayoutManager(this, GRIDLAYOUT_PHONE_COLUMNS);
             layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
 
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -98,6 +111,10 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         mRecycleView.setHasFixedSize(true);
 
         mRecycleView.setAdapter(new RecipeListAdapter(getRecipeNameList(), this));
+
+        if(mIdlingResource!=null){
+            mIdlingResource.setIdleState(true);
+        }
     }
 
     private ArrayList<String> getRecipeNameList() {
@@ -111,6 +128,15 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     @Override
     public void onLoaderReset(Loader<ArrayList<RecipeDetails>> loader) {
         //do nothing
+    }
+
+    @VisibleForTesting
+    @NonNull
+    public IdlingResource getIdlingResource() {
+        if (mIdlingResource == null) {
+            mIdlingResource = new SimpleIdlingResource();
+        }
+        return mIdlingResource;
     }
 
  }

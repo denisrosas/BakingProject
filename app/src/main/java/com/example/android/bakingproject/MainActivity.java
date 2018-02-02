@@ -38,7 +38,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     // The Idling Resource which will be null in production.
     @Nullable
-    private SimpleIdlingResource mIdlingResource;
+    @VisibleForTesting
+    private SimpleIdlingResource mIdlingResource = new SimpleIdlingResource();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,6 +113,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
         mRecycleView.setAdapter(new RecipeListAdapter(getRecipeNameList(), this));
 
+        //if test is running, mIdlingResource will be null
         if(mIdlingResource!=null){
             mIdlingResource.setIdleState(true);
         }

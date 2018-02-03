@@ -6,16 +6,12 @@ import android.util.Log;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-/**
- * Created by denis.b on 30/01/2018.
- */
-
 public class SimpleIdlingResource implements IdlingResource{
 
     @Nullable
     private volatile ResourceCallback mCallback;
 
-    private AtomicBoolean mIsIdleNow = new AtomicBoolean(true);
+    private AtomicBoolean mIsIdleNow = new AtomicBoolean(false);
 
     @Override
     public String getName() {

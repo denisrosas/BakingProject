@@ -9,4 +9,6 @@
     <string name="recipe_name">Recipe Name</string>
     <string name="next_step">Next Step</string>
     <string name="previous_step">Previous Step</string>
+    <string name="tv_default_recipe_name">Recipe Name</string>
+    <string name="ingredient_name">Ingredient Name</string>
 </resources>

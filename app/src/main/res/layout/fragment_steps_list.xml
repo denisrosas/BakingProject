@@ -7,6 +7,11 @@
 
     <TextView
         android:id="@+id/tv_recipe_name"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center_horizontal"
+        android:text="@string/tv_default_recipe_name"
+        android:textSize="35sp"
+        android:textColor="@color/text_black"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 

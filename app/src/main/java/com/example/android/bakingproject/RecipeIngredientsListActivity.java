@@ -10,6 +10,7 @@ import com.example.android.bakingproject.Recipes.Ingredient;
 import com.example.android.bakingproject.Recipes.IngredientsFragment;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 import static com.example.android.bakingproject.MainActivity.globalRecipeDetailsList;
 
@@ -43,19 +44,37 @@ public class RecipeIngredientsListActivity extends AppCompatActivity {
 
     public static ArrayList<String> returnReadableIngredientList(ArrayList<Ingredient> ingredientList) {
 
-        String quantity;
-        String medida;
-        String ingredientName;
+        String finalQuantity;
+        String finalMeasure;
         ArrayList<String> readableIngredientList = new ArrayList<>();
+
+        int ingredNum = 1;
 
         for (Ingredient ingredient : ingredientList){
 
-            if(ingredient.getQuantity() == 0.5)
-                quantity = "Half";
-            else
-                quantity = Float.toString(ingredient.getQuantity());
+            if(ingredient.getQuantity() == 0.5){
+                finalQuantity = "Half";
+            }
+            //else if quantity float has an integer value, we don't need to show decimal case
+            else if(ingredient.getQuantity()%1==0) {
+                finalQuantity = String.format(Locale.getDefault(),"%.0f", ingredient.getQuantity());
+            } else{
+                finalQuantity = Float.toString(ingredient.getQuantity());
+            }
 
-            readableIngredientList.add(quantity+" "+ingredient.getMeasure()+" of "+ingredient.getIngredientName());
+            finalMeasure = ingredient.getMeasure().
+                    replace("CUP","Cup(s)").
+                    replace("K", "Kg").
+                    replace("G", "Gram(s)").
+                    replace("OZ", "Ounce(s)").
+                    replace("TSP", "tea spoon(s)").
+                    replace("TBLSP", "table spoon(s)").
+                    replace("UNIT", "Unit");
+
+            readableIngredientList.add(ingredNum+") - "+finalQuantity+" "+finalMeasure+" of "+
+                    ingredient.getIngredientName());
+
+            ingredNum++;
         }
         return readableIngredientList;
     }

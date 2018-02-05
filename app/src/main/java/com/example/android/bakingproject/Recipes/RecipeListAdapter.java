@@ -42,6 +42,7 @@ public class RecipeListAdapter extends RecyclerView.Adapter <RecipeViewHolder> {
             public void onClick(View view) {
                 Intent intent = new Intent(activityContext, RecipeStepsListActivity.class);
                 intent.putExtra(RECIPE_ID, position);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 activityContext.startActivity(intent);
             }
         });

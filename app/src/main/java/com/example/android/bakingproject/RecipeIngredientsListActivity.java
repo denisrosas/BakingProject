@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.MenuItem;
 
 import com.example.android.bakingproject.Recipes.Ingredient;
 import com.example.android.bakingproject.Recipes.IngredientsFragment;
@@ -24,9 +25,11 @@ public class RecipeIngredientsListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_ingredients_list);
 
+        if(getActionBar()!=null)
+            getActionBar().setDisplayHomeAsUpEnabled(true);
+
         Intent intent = getIntent();
-        intent.getExtras().getInt(RECIPE_ID);
-        int recipeId = intent.getIntExtra(RECIPE_ID, 3);
+        int recipeId = intent.getIntExtra(RECIPE_ID, 0);
         Log.i("denis", "RecipeIngredientsListActivity - RecipeId: "+recipeId);
 
         ArrayList<String> readableIngredientList = returnReadableIngredientList(globalRecipeDetailsList.
@@ -39,7 +42,16 @@ public class RecipeIngredientsListActivity extends AppCompatActivity {
         fragmentManager.beginTransaction()
                 .add(R.id.ingredients_list_container, ingredientsFragment)
                 .commit();
+    }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId()==android.R.id.home){
+            onBackPressed();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     public static ArrayList<String> returnReadableIngredientList(ArrayList<Ingredient> ingredientList) {

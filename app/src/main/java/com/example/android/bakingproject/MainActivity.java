@@ -46,12 +46,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //will be initialized only if testing
-        if(mIdlingResource!=null) {
-            mIdlingResource.setIdleState(false);
-            Log.i("denis", "essa mesangem deve aparecer somente em testes do espresso");
-        }
-
         ButterKnife.bind(this);
 
         //check if device should display in Two-Pane-Mode

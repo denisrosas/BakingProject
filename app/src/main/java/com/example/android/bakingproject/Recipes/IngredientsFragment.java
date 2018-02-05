@@ -18,6 +18,8 @@ import butterknife.ButterKnife;
 
 public class IngredientsFragment extends Fragment {
 
+    private static final String INGREDIENTS_LIST = "INGREDIENTS_LIST";
+
     ArrayList<String> ingredientsList;
 
     @BindView(R.id.lv_ingredients_list)
@@ -26,6 +28,9 @@ public class IngredientsFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
+        if(savedInstanceState!=null)
+            ingredientsList = savedInstanceState.getStringArrayList(INGREDIENTS_LIST);
 
         View rootView = inflater.inflate(R.layout.fragment_ingredients_list, container, false);
 
@@ -41,5 +46,12 @@ public class IngredientsFragment extends Fragment {
 
     public void setIngredientsList(ArrayList<String> ingredientsList) {
         this.ingredientsList = ingredientsList;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+
+        outState.putStringArrayList(INGREDIENTS_LIST, ingredientsList);
+        super.onSaveInstanceState(outState);
     }
 }

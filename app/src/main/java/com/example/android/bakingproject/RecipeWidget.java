@@ -48,6 +48,8 @@ public class RecipeWidget extends AppWidgetProvider {
         } else {
             intentIngredientsList = new Intent(context, RecipeIngredientsListActivity.class);
         }
+
+        intentIngredientsList.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intentIngredientsList.putExtra(RECIPE_ID, recipe_id);
 
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0,

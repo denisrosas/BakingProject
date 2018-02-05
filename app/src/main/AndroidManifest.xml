@@ -19,9 +19,30 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".RecipeStepsListActivity" />
-        <activity android:name=".RecipeStepDetailActivity" />
-        <activity android:name=".RecipeIngredientsListActivity" />
+        <activity
+            android:name=".RecipeStepsListActivity"
+            android:parentActivityName=".MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
+
+        <activity android:name=".RecipeStepDetailActivity"
+            android:parentActivityName=".RecipeStepsListActivity"
+            >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".RecipeStepsListActivity"
+                />
+        </activity>
+
+        <activity
+            android:name=".RecipeIngredientsListActivity"
+            android:parentActivityName=".RecipeStepsListActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".RecipeStepsListActivity"/>
+        </activity>
 
         <receiver android:name=".RecipeWidget">
             <intent-filter>

@@ -3,7 +3,9 @@ package com.example.android.bakingproject;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
 
 import com.example.android.bakingproject.Recipes.IngredientsFragment;
 import com.example.android.bakingproject.Recipes.RecipeStep;
@@ -28,8 +30,13 @@ public class RecipeStepsListActivity extends AppCompatActivity implements Recipe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_steps_list);
 
-        Intent i = getIntent();
-        recipeId = i.getIntExtra(RECIPE_ID, 0);
+        if(getActionBar()!=null)
+            getActionBar().setDisplayHomeAsUpEnabled(true);
+
+        if(savedInstanceState!=null)
+            recipeId = savedInstanceState.getInt(RECIPE_ID);
+        else
+            recipeId = getIntent().getIntExtra(RECIPE_ID, 0);
 
         RecipeStepsFragment recipeStepsFragment = new RecipeStepsFragment();
         recipeStepsFragment.setRecipeName(globalRecipeDetailsList.get(recipeId).getName());
@@ -53,6 +60,16 @@ public class RecipeStepsListActivity extends AppCompatActivity implements Recipe
                     .commit();
         }
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId()==android.R.id.home){
+            NavUtils.navigateUpFromSameTask(this);
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     private ArrayList<String> getStepListFromGlobal(int recipeId){
@@ -105,11 +122,13 @@ public class RecipeStepsListActivity extends AppCompatActivity implements Recipe
             //TODO - se position for 0, carregar a acitivy de ingredientes. se 1 ou mais, carregar o RecipeStepDetailActivity
             if(position==0){
                 Intent intent = new Intent(this, RecipeIngredientsListActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 intent.putExtra(RECIPE_ID, (recipeId));
                 startActivity(intent);
             } else {
                 //Toast.makeText(this, "posicao: " + position, Toast.LENGTH_LONG).show();
                 Intent intent = new Intent(this, RecipeStepDetailActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 intent.putExtra(STEP_ID, (position-1));
                 intent.putExtra(RECIPE_ID, (recipeId));
                 startActivity(intent);
@@ -130,4 +149,11 @@ public class RecipeStepsListActivity extends AppCompatActivity implements Recipe
                     .commit();
         }
     }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(RECIPE_ID, recipeId);
+    }
+
 }

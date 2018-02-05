@@ -5,6 +5,7 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
 import android.view.WindowManager;
 
 import com.example.android.bakingproject.Recipes.RecipeStepDetailsFragment;
@@ -29,6 +30,9 @@ public class RecipeStepDetailActivity extends AppCompatActivity implements Recip
         }
         setContentView(R.layout.activity_recipe_step_detail);
 
+        if(getActionBar()!=null)
+            getActionBar().setDisplayHomeAsUpEnabled(true);
+
         Intent intent = getIntent();
         int recipeId = intent.getIntExtra(RECIPE_ID, 0);
         int stepId = intent.getIntExtra(STEP_ID, 0);
@@ -43,6 +47,15 @@ public class RecipeStepDetailActivity extends AppCompatActivity implements Recip
                 .commit();
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId()==android.R.id.home){
+            onBackPressed();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
 
     @Override
     public void onPrevNextStepSelected(int recipeId, int newStepId) {

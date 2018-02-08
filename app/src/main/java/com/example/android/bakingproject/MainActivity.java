@@ -73,7 +73,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             } else {
                 loaderManager.restartLoader(loaderId, null, this);
             }
-        }
+        } else
+            progressBar.setVisibility(View.INVISIBLE);
     }
 
     @Override

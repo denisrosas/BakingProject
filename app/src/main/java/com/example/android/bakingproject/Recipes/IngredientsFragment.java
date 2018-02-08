@@ -19,6 +19,7 @@ import butterknife.ButterKnife;
 public class IngredientsFragment extends Fragment {
 
     private static final String INGREDIENTS_LIST = "INGREDIENTS_LIST";
+    private static final String LIST_VIEW_BUNDLE = "LIST_VIEW_BUNDLE";
 
     ArrayList<String> ingredientsList;
 
@@ -41,6 +42,9 @@ public class IngredientsFragment extends Fragment {
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(rootView.getContext(), R.layout.textview_ingredient, ingredientsList);
         listView.setAdapter(arrayAdapter);
 
+        if(savedInstanceState!=null)
+            listView.onRestoreInstanceState(savedInstanceState.getParcelable(LIST_VIEW_BUNDLE));
+
         return rootView;
     }
 
@@ -50,8 +54,8 @@ public class IngredientsFragment extends Fragment {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-
-        outState.putStringArrayList(INGREDIENTS_LIST, ingredientsList);
         super.onSaveInstanceState(outState);
+        outState.putStringArrayList(INGREDIENTS_LIST, ingredientsList);
+        outState.putParcelable(LIST_VIEW_BUNDLE, listView.onSaveInstanceState());
     }
 }

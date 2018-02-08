@@ -16,7 +16,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Scanner;
 
-public class NetworkUtils {
+public final class NetworkUtils {
 
 
     //private static final String TMDB_BASE_URL = "http://go.udacity.com/";
@@ -25,6 +25,8 @@ public class NetworkUtils {
     private final static String BAKING_APP_JSON = "topher/2017/May/59121517_baking/baking.json";
 
     private final static int CONNECTION_TIMEOUT = 10000;
+
+    private NetworkUtils() {}
 
     public static URL buildUrlRecipesList() {
 

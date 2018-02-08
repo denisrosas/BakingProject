@@ -205,8 +205,7 @@ public class RecipeStepDetailsFragment extends Fragment implements ExoPlayer.Eve
     public void onResume() {
         super.onResume();
         if(mExoPlayer==null) {
-            Log.i("denis","chamando o onResume -> initializePlayer");
-            initializePlayer(Uri.parse(/*recipeStep.getVideoURL()*/"http://www.onirikal.com/videos/mp4/fontvella.mp4"));
+            initializePlayer(Uri.parse(recipeStep.getVideoURL()));
         }
     }
 
@@ -216,10 +215,6 @@ public class RecipeStepDetailsFragment extends Fragment implements ExoPlayer.Eve
             mExoPlayer.stop();
             mExoPlayer.release();
             mExoPlayer = null;
-        }
-        if(mPlayerView!=null){
-            mPlayerView.setVisibility(View.GONE);
-            mPlayerView = null;
         }
     }
 

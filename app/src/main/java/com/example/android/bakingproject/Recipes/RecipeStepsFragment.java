@@ -22,6 +22,7 @@ public class RecipeStepsFragment extends Fragment {
 
     static final String RECIPE_NAME = "RECIPE_NAME";
     static final String RECIPE_STEP_NAMES = "RECIPE_STEP_NAMES";
+    static final String RECYCLERVIEW_SCROL_STATE = "RECYCLERVIEW_SCROL_STATE";
 
     ArrayList<String> recipeStepNames = new ArrayList<>();
     private String recipeName;
@@ -69,6 +70,9 @@ public class RecipeStepsFragment extends Fragment {
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(new RecipeStepListAdapter(recipeStepNames));
 
+        if(savedInstanceState!=null)
+            recyclerView.getLayoutManager().onRestoreInstanceState(savedInstanceState.getParcelable(RECYCLERVIEW_SCROL_STATE));
+
         return rootView;
     }
 
@@ -77,5 +81,7 @@ public class RecipeStepsFragment extends Fragment {
         super.onSaveInstanceState(outState);
         outState.putString(RECIPE_NAME, recipeName);
         outState.putStringArrayList(RECIPE_STEP_NAMES, recipeStepNames);
+        outState.putParcelable(RECYCLERVIEW_SCROL_STATE, recyclerView.getLayoutManager().onSaveInstanceState());
+
     }
 }

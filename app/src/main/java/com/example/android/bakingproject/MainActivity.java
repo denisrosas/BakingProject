@@ -12,6 +12,8 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.android.bakingproject.IndlingResource.SimpleIdlingResource;
@@ -34,6 +36,9 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     @BindView(R.id.rv_recipes_list)
     RecyclerView mRecycleView;
 
+    @BindView(R.id.progressBar)
+    ProgressBar progressBar;
+
     public static boolean mTwoPaneMode = false;
 
     // The Idling Resource which will be null in production.
@@ -47,6 +52,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         setContentView(R.layout.activity_main);
 
         ButterKnife.bind(this);
+
+        progressBar.setVisibility(View.VISIBLE);
 
         //check if device should display in Two-Pane-Mode
         mTwoPaneMode = findViewById(R.id.rl_mainactivity_tablet) != null;
@@ -106,6 +113,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         mRecycleView.setHasFixedSize(true);
 
         mRecycleView.setAdapter(new RecipeListAdapter(getRecipeNameList(), this));
+
+        progressBar.setVisibility(View.INVISIBLE);
 
         //if test is running, mIdlingResource will be null
         if(mIdlingResource!=null){

@@ -3,7 +3,6 @@ package com.example.android.bakingproject;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
@@ -33,39 +32,29 @@ public class RecipeStepsListActivity extends AppCompatActivity implements Recipe
         if(getActionBar()!=null)
             getActionBar().setDisplayHomeAsUpEnabled(true);
 
-        if(savedInstanceState!=null)
-            recipeId = savedInstanceState.getInt(RECIPE_ID);
-        else
+        //case of device rotation
+        if(savedInstanceState==null) {
             recipeId = getIntent().getIntExtra(RECIPE_ID, 0);
+            //adding the steps list fragment
+            RecipeStepsFragment recipeStepsFragment = new RecipeStepsFragment();
+            recipeStepsFragment.setRecipeName(globalRecipeDetailsList.get(recipeId).getName());
+            recipeStepsFragment.setRecipeStepNames(getStepListFromGlobal(recipeId));
 
-        RecipeStepsFragment recipeStepsFragment = new RecipeStepsFragment();
-        recipeStepsFragment.setRecipeName(globalRecipeDetailsList.get(recipeId).getName());
-        recipeStepsFragment.setRecipeStepNames(getStepListFromGlobal(recipeId));
-
-        FragmentManager fragmentManager = getSupportFragmentManager();
-
-        fragmentManager.beginTransaction()
-                .add(R.id.steps_list_container, recipeStepsFragment)
-                .commit();
-
-        if(MainActivity.mTwoPaneMode){
-            ArrayList<String> readableIngredientList = returnReadableIngredientList(globalRecipeDetailsList.
-                    get(recipeId).getIngredientList());
-
-            IngredientsFragment ingredientsFragment = new IngredientsFragment();
-            ingredientsFragment.setIngredientsList(readableIngredientList);
+            FragmentManager fragmentManager = getSupportFragmentManager();
 
             fragmentManager.beginTransaction()
-                    .add(R.id.steps_details_container, ingredientsFragment)
+                    .add(R.id.steps_list_container, recipeStepsFragment)
                     .commit();
         }
-
+        else {
+            recipeId = savedInstanceState.getInt(RECIPE_ID);
+        }
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if(item.getItemId()==android.R.id.home){
-            NavUtils.navigateUpFromSameTask(this);
+            onBackPressed();
             return true;
         }
 

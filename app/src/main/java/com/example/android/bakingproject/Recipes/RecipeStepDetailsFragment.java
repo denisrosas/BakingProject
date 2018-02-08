@@ -1,19 +1,23 @@
 package com.example.android.bakingproject.Recipes;
 
 import android.content.Context;
+import android.graphics.Point;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.android.bakingproject.MainActivity;
 import com.example.android.bakingproject.R;
+import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.ExoPlayer;
@@ -48,6 +52,12 @@ public class RecipeStepDetailsFragment extends Fragment implements ExoPlayer.Eve
     static final String STEP_VIDEO_URL = "STEP_VIDEO_URL";
     static final String STEP_THUMBNAIL_URL = "STEP_THUMBNAIL_URL";
 
+    static final String RECIPE_ID = "RECIPE_ID";
+    static final String STEP_ID = "STEP_ID";
+    static final String SEEK_TIME_PLAYER = "SEEK_TIME_PLAYER";
+
+    long seekTimePlayer = C.TIME_UNSET;
+
     private OnChangeStepClickListener mCallBack;
 
     public interface OnChangeStepClickListener{
@@ -66,86 +76,108 @@ public class RecipeStepDetailsFragment extends Fragment implements ExoPlayer.Eve
                     savedInstanceState.getString(STEP_DESCRIPTION),
                     savedInstanceState.getString(STEP_VIDEO_URL),
                     savedInstanceState.getString(STEP_THUMBNAIL_URL));
+            recipeId = savedInstanceState.getInt(RECIPE_ID);
+            stepId = savedInstanceState.getInt(STEP_ID);
+            seekTimePlayer = savedInstanceState.getLong(SEEK_TIME_PLAYER);
         }
 
         View rootView = inflater.inflate(R.layout.fragment_step_details, container, false);
 
         //The JSON received can have 2 fields (videourl and thumbnailurl). Both fields can have a
         // link to a video of the recipe. To make sure it's a link it should start with http or https
+        //in case
+        mPlayerView = rootView.findViewById(R.id.exoplayer_step_view);
+
+        //if in TwoPaneMode and landscape, Exoplayer video height will be half of screen height
+        if((MainActivity.mTwoPaneMode)&&(getResources().getConfiguration().orientation == ORIENTATION_LANDSCAPE)){
+            Display display = getActivity().getWindowManager().getDefaultDisplay();
+            Point size = new Point();
+            display.getSize(size);
+            mPlayerView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int)((size.y)/1.6) ));
+        }
 
         if((recipeStep.getVideoURL().startsWith("https://"))||(recipeStep.getVideoURL().startsWith("http://"))) {
-            mPlayerView = rootView.findViewById(R.id.exoplayer_step_view);
             initializePlayer(Uri.parse(recipeStep.getVideoURL()));
         }
-        else if ((recipeStep.getThumbnailURL().startsWith("https://"))||(recipeStep.getThumbnailURL().startsWith("http://"))){
-            mPlayerView = rootView.findViewById(R.id.exoplayer_step_view);
+        else if ((recipeStep.getThumbnailURL().startsWith("https://"))||(recipeStep.getThumbnailURL().startsWith("http://"))) {
             initializePlayer(Uri.parse(recipeStep.getThumbnailURL()));
         }
         else {
             noVideo = true;
-            mPlayerView = rootView.findViewById(R.id.exoplayer_step_view);
             mPlayerView.setVisibility(View.GONE);
             Log.i("denis","No Video Found in this step. Exoplayer View will be hidden.");
         }
 
-        //if in Landscape, video will play in fullscreen so there is no need to display the textview
+        defineViewsVisibility(rootView, noVideo);
+        return rootView;
+    }
+
+    //Defines the Visibility of tv_step_description, button_previous_step and button_next_step
+
+    private void defineViewsVisibility(View rootView, boolean noVideo){
+        //if in Landscape and not in two-Pane-mode, video will play in fullscreen
+        // so there is no need to display the textview
         TextView textViewStepDescription = rootView.findViewById(R.id.tv_step_description);
         Button buttonPrevStep = rootView.findViewById(R.id.button_previous_step);
         Button buttonNextStep = rootView.findViewById(R.id.button_next_step);
 
-        if ((getResources().getConfiguration().orientation == ORIENTATION_LANDSCAPE)&&(!noVideo)){
+        if ((getResources().getConfiguration().orientation == ORIENTATION_LANDSCAPE) &&
+                (!noVideo) && (!MainActivity.mTwoPaneMode)) {
+            //all gone because video will be displayed in full screen
             textViewStepDescription.setVisibility(View.GONE);
             buttonPrevStep.setVisibility(View.GONE);
             buttonNextStep.setVisibility(View.GONE);
         } else {
+            //if not in full screen, the textview will always be visible
             textViewStepDescription.setText(recipeStep.getDescription());
 
-            if(isFirstStep()){
+            if(MainActivity.mTwoPaneMode){
+                //don't display navigation buttons in Two Pane Mode
                 buttonPrevStep.setVisibility(View.INVISIBLE);
+                buttonNextStep.setVisibility(View.INVISIBLE);
+            } else {
+                if (isFirstStep()) {
+                    if (!isLastStep()) {
+                        //only Next Step button will be displayed
+                        buttonPrevStep.setVisibility(View.INVISIBLE);
+                        buttonNextStep.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                mCallBack.onPrevNextStepSelected(recipeId, (stepId + 1));
+                            }
+                        });
+                    } else { //isFirstStep and isLastStep are both true -> There is only one step
+                        buttonPrevStep.setVisibility(View.INVISIBLE);
+                        buttonNextStep.setVisibility(View.INVISIBLE);
+                    }
 
-                Log.i("denis", "RecipeStepDetailsFragment - onCreateView() - It's the first step");
-                if(!isLastStep()) {
+                } else if (isLastStep()) {
+                    //only Prev Step button will be displayed
+                    buttonPrevStep.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            mCallBack.onPrevNextStepSelected(recipeId, (stepId - 1));
+                        }
+                    });
+                    buttonNextStep.setVisibility(View.INVISIBLE);
+                } else {
+                    //both buttons will be displayed
+                    buttonPrevStep.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            mCallBack.onPrevNextStepSelected(recipeId, (stepId - 1));
+                        }
+                    });
+
                     buttonNextStep.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
                             mCallBack.onPrevNextStepSelected(recipeId, (stepId + 1));
                         }
                     });
-                } else { //will enter here only if there is one single step in the recipe
-                    buttonNextStep.setVisibility(View.INVISIBLE);
                 }
-
-            } else if (isLastStep()){
-
-                Log.i("denis", "RecipeStepDetailsFragment - onCreateView() - It's the last step");
-                buttonPrevStep.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        mCallBack.onPrevNextStepSelected(recipeId, (stepId-1));
-                    }
-                });
-
-                buttonNextStep.setVisibility(View.INVISIBLE);
-            } else {
-
-                Log.i("denis", "RecipeStepDetailsFragment - onCreateView() - Not first nor last");
-                buttonPrevStep.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        mCallBack.onPrevNextStepSelected(recipeId, (stepId-1));
-                    }
-                });
-
-                buttonNextStep.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        mCallBack.onPrevNextStepSelected(recipeId, (stepId + 1));
-                    }
-                });
             }
         }
-
-        return rootView;
     }
 
     private boolean isLastStep() {
@@ -155,8 +187,6 @@ public class RecipeStepDetailsFragment extends Fragment implements ExoPlayer.Eve
     private boolean isFirstStep() {
         return stepId == 0;
     }
-
-
 
     @Override
     public void onAttach(Context context) {
@@ -170,11 +200,26 @@ public class RecipeStepDetailsFragment extends Fragment implements ExoPlayer.Eve
         releasePlayer();
     }
 
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(mExoPlayer==null) {
+            Log.i("denis","chamando o onResume -> initializePlayer");
+            initializePlayer(Uri.parse(/*recipeStep.getVideoURL()*/"http://www.onirikal.com/videos/mp4/fontvella.mp4"));
+        }
+    }
+
     private void releasePlayer() {
         if(mExoPlayer!=null) {
+            seekTimePlayer = mExoPlayer.getCurrentPosition();
             mExoPlayer.stop();
             mExoPlayer.release();
             mExoPlayer = null;
+        }
+        if(mPlayerView!=null){
+            mPlayerView.setVisibility(View.GONE);
+            mPlayerView = null;
         }
     }
 
@@ -186,12 +231,18 @@ public class RecipeStepDetailsFragment extends Fragment implements ExoPlayer.Eve
             mExoPlayer = ExoPlayerFactory.newSimpleInstance(this.getActivity(), trackSelector, loadControl);
             mPlayerView.setPlayer(mExoPlayer);
 
-            if(getResources().getConfiguration().orientation == ORIENTATION_LANDSCAPE) {
+            if ((getResources().getConfiguration().orientation == ORIENTATION_LANDSCAPE)&&
+                    (!MainActivity.mTwoPaneMode)){
+                //set player to full screen
                 mPlayerView.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_FILL);
             }
 
             // Set the ExoPlayer.EventListener to this activity.
             mExoPlayer.addListener(this);
+
+            //if seekTimePlayer is not TimeUnset, means that activity left the foreground and returned
+            if(seekTimePlayer!=C.TIME_UNSET)
+                mExoPlayer.seekTo(seekTimePlayer);
 
             // Prepare the MediaSource.
             String userAgent = Util.getUserAgent(this.getActivity(), "BakingProject");
@@ -218,9 +269,10 @@ public class RecipeStepDetailsFragment extends Fragment implements ExoPlayer.Eve
         outState.putString(STEP_DESCRIPTION, recipeStep.getDescription());
         outState.putString(STEP_VIDEO_URL, recipeStep.getVideoURL());
         outState.putString(STEP_THUMBNAIL_URL, recipeStep.getThumbnailURL());
+        outState.putInt(RECIPE_ID, recipeId);
+        outState.putInt(STEP_ID, stepId);
+        outState.putLong(SEEK_TIME_PLAYER, seekTimePlayer);
     }
-
-
 
     @Override
     public void onTimelineChanged(Timeline timeline, Object manifest) {

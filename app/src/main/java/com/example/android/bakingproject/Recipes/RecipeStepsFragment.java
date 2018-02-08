@@ -20,6 +20,9 @@ import butterknife.ButterKnife;
 
 public class RecipeStepsFragment extends Fragment {
 
+    static final String RECIPE_NAME = "RECIPE_NAME";
+    static final String RECIPE_STEP_NAMES = "RECIPE_STEP_NAMES";
+
     ArrayList<String> recipeStepNames = new ArrayList<>();
     private String recipeName;
 
@@ -46,6 +49,12 @@ public class RecipeStepsFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
+        if(savedInstanceState!=null){
+            recipeName = savedInstanceState.getString(RECIPE_NAME);
+            recipeStepNames = savedInstanceState.getStringArrayList(RECIPE_STEP_NAMES);
+        }
+
         View rootView = inflater.inflate(R.layout.fragment_steps_list, container, false);
 
         ButterKnife.bind(this, rootView);
@@ -61,5 +70,12 @@ public class RecipeStepsFragment extends Fragment {
         recyclerView.setAdapter(new RecipeStepListAdapter(recipeStepNames));
 
         return rootView;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(RECIPE_NAME, recipeName);
+        outState.putStringArrayList(RECIPE_STEP_NAMES, recipeStepNames);
     }
 }

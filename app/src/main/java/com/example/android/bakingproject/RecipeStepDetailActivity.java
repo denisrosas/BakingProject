@@ -33,18 +33,21 @@ public class RecipeStepDetailActivity extends AppCompatActivity implements Recip
         if(getActionBar()!=null)
             getActionBar().setDisplayHomeAsUpEnabled(true);
 
-        Intent intent = getIntent();
-        int recipeId = intent.getIntExtra(RECIPE_ID, 0);
-        int stepId = intent.getIntExtra(STEP_ID, 0);
+        if(savedInstanceState==null){
 
-        RecipeStepDetailsFragment stepDetailsFragment = new RecipeStepDetailsFragment();
-        stepDetailsFragment.setRecipeStep(globalRecipeDetailsList.get(recipeId).getRecipeSteps().get(stepId));
-        stepDetailsFragment.setRecipeStepIds(recipeId, stepId);
+            Intent intent = getIntent();
+            int recipeId = intent.getIntExtra(RECIPE_ID, 0);
+            int stepId = intent.getIntExtra(STEP_ID, 0);
 
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction()
-                .add(R.id.steps_details_container, stepDetailsFragment)
-                .commit();
+            RecipeStepDetailsFragment stepDetailsFragment = new RecipeStepDetailsFragment();
+            stepDetailsFragment.setRecipeStep(globalRecipeDetailsList.get(recipeId).getRecipeSteps().get(stepId));
+            stepDetailsFragment.setRecipeStepIds(recipeId, stepId);
+
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction()
+                    .add(R.id.steps_details_container, stepDetailsFragment)
+                    .commit();
+        }
     }
 
     @Override

@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.MenuItem;
 
 import com.example.android.bakingproject.Recipes.Ingredient;
@@ -19,6 +18,7 @@ public class RecipeIngredientsListActivity extends AppCompatActivity {
 
     static final String RECIPE_ID = "RECIPE_ID";
     ArrayList<Ingredient> ingredientList;
+    int recipeId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,19 +29,22 @@ public class RecipeIngredientsListActivity extends AppCompatActivity {
             getActionBar().setDisplayHomeAsUpEnabled(true);
 
         Intent intent = getIntent();
-        int recipeId = intent.getIntExtra(RECIPE_ID, 0);
-        Log.i("denis", "RecipeIngredientsListActivity - RecipeId: "+recipeId);
 
-        ArrayList<String> readableIngredientList = returnReadableIngredientList(globalRecipeDetailsList.
-                get(recipeId).getIngredientList());
+        if(savedInstanceState==null) {
+            recipeId = intent.getIntExtra(RECIPE_ID, 0);
+            ArrayList<String> readableIngredientList = returnReadableIngredientList(globalRecipeDetailsList.
+                    get(recipeId).getIngredientList());
 
-        IngredientsFragment ingredientsFragment = new IngredientsFragment();
-        ingredientsFragment.setIngredientsList(readableIngredientList);
+            IngredientsFragment ingredientsFragment = new IngredientsFragment();
+            ingredientsFragment.setIngredientsList(readableIngredientList);
 
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction()
-                .add(R.id.ingredients_list_container, ingredientsFragment)
-                .commit();
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction()
+                    .add(R.id.ingredients_list_container, ingredientsFragment)
+                    .commit();
+        } else{
+            recipeId = savedInstanceState.getInt(RECIPE_ID);
+        }
     }
 
     @Override
@@ -89,5 +92,11 @@ public class RecipeIngredientsListActivity extends AppCompatActivity {
             ingredNum++;
         }
         return readableIngredientList;
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(RECIPE_ID, recipeId);
     }
 }

@@ -49,9 +49,12 @@ public class RecipeWidget extends AppWidgetProvider {
             intentIngredientsList = new Intent(context, RecipeIngredientsListActivity.class);
         }
 
+        //prevent to create multiple intances of list ingredients activity
         intentIngredientsList.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
         intentIngredientsList.putExtra(RECIPE_ID, recipe_id);
 
+        //set the pending intent of the listof ingredients and recipe name
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0,
                 intentIngredientsList, PendingIntent.FLAG_UPDATE_CURRENT);
         views.setOnClickPendingIntent(R.id.tv_recipe_name_widget, pendingIntent);

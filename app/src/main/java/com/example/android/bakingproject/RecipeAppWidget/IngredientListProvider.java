@@ -1,8 +1,6 @@
 package com.example.android.bakingproject.RecipeAppWidget;
 
-import android.appwidget.AppWidgetManager;
 import android.content.Context;
-import android.content.Intent;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
@@ -18,11 +16,10 @@ public class IngredientListProvider implements RemoteViewsService.RemoteViewsFac
         private Context context = null;
         private int appWidgetId;
 
-        public IngredientListProvider(Context context, Intent intent) {
+        public IngredientListProvider(Context context, int appWidgetId, ArrayList<String> ingredientList) {
             this.context = context;
-            appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,
-                    AppWidgetManager.INVALID_APPWIDGET_ID);
-
+            this.appWidgetId =  appWidgetId;
+            this.ingredientItemList = ingredientList;
         }
 
 

@@ -197,15 +197,29 @@ public class RecipeStepDetailsFragment extends Fragment implements ExoPlayer.Eve
     @Override
     public void onPause() {
         super.onPause();
-        releasePlayer();
+        if (Util.SDK_INT <= 23) {
+            releasePlayer();
+        }
     }
 
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (Util.SDK_INT > 23) {
+            releasePlayer();
+        }
+    }
 
     @Override
     public void onResume() {
         super.onResume();
         if(mExoPlayer==null) {
-            initializePlayer(Uri.parse(recipeStep.getVideoURL()));
+            if((recipeStep.getVideoURL().startsWith("https://"))||(recipeStep.getVideoURL().startsWith("http://"))) {
+                initializePlayer(Uri.parse(recipeStep.getVideoURL()));
+            }
+            else if ((recipeStep.getThumbnailURL().startsWith("https://"))||(recipeStep.getThumbnailURL().startsWith("http://"))) {
+                initializePlayer(Uri.parse(recipeStep.getThumbnailURL()));
+            }
         }
     }
 

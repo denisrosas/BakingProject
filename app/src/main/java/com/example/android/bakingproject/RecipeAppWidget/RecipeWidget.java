@@ -71,6 +71,7 @@ public class RecipeWidget extends AppWidgetProvider {
         lvAdapterIntent.putExtra(RECIPE_ID, recipe_id);
         lvAdapterIntent.setData(Uri.parse(lvAdapterIntent.toUri(Intent.URI_INTENT_SCHEME)));
         views.setRemoteAdapter(R.id.lv_widget_ingredient_list, lvAdapterIntent);
+        views.setPendingIntentTemplate(R.id.lv_widget_ingredient_list, pendingIntent);
 
         appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetId, R.id.ll_widget_container);
         appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetId, R.id.lv_widget_ingredient_list);

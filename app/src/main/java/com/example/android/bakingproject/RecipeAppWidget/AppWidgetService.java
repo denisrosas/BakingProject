@@ -6,7 +6,10 @@ import android.util.Log;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
+import com.example.android.bakingproject.MainActivity;
 import com.example.android.bakingproject.R;
+import com.example.android.bakingproject.RecipeIngredientsListActivity;
+import com.example.android.bakingproject.RecipeStepsListActivity;
 
 import java.util.ArrayList;
 
@@ -31,6 +34,8 @@ public class AppWidgetService extends RemoteViewsService {
 class IngredientListProvider implements RemoteViewsService.RemoteViewsFactory {
 
     private final int recipe_id;
+    static final String RECIPE_ID = "RECIPE_ID";
+
     private ArrayList<String> ingredientItemList = new ArrayList<>();
         private Context context = null;
 
@@ -66,9 +71,23 @@ class IngredientListProvider implements RemoteViewsService.RemoteViewsFactory {
 
     @Override
     public RemoteViews getViewAt(int position) {
-        final RemoteViews remoteView = new RemoteViews(context.getPackageName(), R.layout.widget_ingredient);
-        remoteView.setTextViewText(R.id.tv_single_ingredient_listview, ingredientItemList.get(position));
-        return remoteView;
+        RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.widget_ingredient);
+        remoteViews.setTextViewText(R.id.tv_single_ingredient_listview, ingredientItemList.get(position));
+
+        Intent intentIngredientsList;
+
+        if (MainActivity.mTwoPaneMode){
+            intentIngredientsList = new Intent(context, RecipeStepsListActivity.class);
+        } else {
+            intentIngredientsList = new Intent(context, RecipeIngredientsListActivity.class);
+        }
+
+        //prevent to create multiple intances of list ingredients activity
+        intentIngredientsList.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intentIngredientsList.putExtra(RECIPE_ID, recipe_id);
+        remoteViews.setOnClickFillInIntent(R.id.tv_single_ingredient_listview, intentIngredientsList);
+
+        return remoteViews;
     }
 
     @Override

@@ -34,6 +34,9 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestCompile 'com.android.support.test:runner:1.0.1'
 
+    //Picasso
+    compile 'com.squareup.picasso:picasso:2.5.2'
+
     //Exo Player
     compile 'com.google.android.exoplayer:exoplayer:r2.2.0'
 

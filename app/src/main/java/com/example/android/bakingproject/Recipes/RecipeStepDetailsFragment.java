@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -36,6 +37,10 @@ import com.google.android.exoplayer2.ui.AspectRatioFrameLayout;
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
+import com.squareup.picasso.Picasso;
+
+import java.net.MalformedURLException;
+import java.net.URL;
 
 import static android.content.res.Configuration.ORIENTATION_LANDSCAPE;
 
@@ -70,6 +75,7 @@ public class RecipeStepDetailsFragment extends Fragment implements ExoPlayer.Eve
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         boolean noVideo = false;
+        boolean noImage = false;
 
         if(savedInstanceState!=null){
             recipeStep = new RecipeStep(0, savedInstanceState.getString(STEP_SHORT_DESCRIPTION),
@@ -96,30 +102,83 @@ public class RecipeStepDetailsFragment extends Fragment implements ExoPlayer.Eve
             mPlayerView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int)((size.y)/1.6) ));
         }
 
-        if((recipeStep.getVideoURL().startsWith("https://"))||(recipeStep.getVideoURL().startsWith("http://"))) {
+        //check if there is video in VideoURL and ThumbNailURL fields received from Json
+        //if the url is of a video, start ExoPlayer. If not, hide the player view
+        if((isUrl(recipeStep.getVideoURL()))&&(isUrlOfVideo(recipeStep.getVideoURL()))) {
             initializePlayer(Uri.parse(recipeStep.getVideoURL()));
         }
-        else if ((recipeStep.getThumbnailURL().startsWith("https://"))||(recipeStep.getThumbnailURL().startsWith("http://"))) {
+        else if ((isUrl(recipeStep.getThumbnailURL()))&&(isUrlOfVideo(recipeStep.getThumbnailURL()))) {
             initializePlayer(Uri.parse(recipeStep.getThumbnailURL()));
         }
         else {
             noVideo = true;
-            mPlayerView.setVisibility(View.GONE);
             Log.i("denis","No Video Found in this step. Exoplayer View will be hidden.");
         }
 
-        defineViewsVisibility(rootView, noVideo);
+        //check if the Thumbnail is of a Image. If is, set the ImageView
+        if ((isUrl(recipeStep.getThumbnailURL()))&&(isUrlOfImage(recipeStep.getThumbnailURL()))){
+
+            ImageView imageView = rootView.findViewById(R.id.iv_recipe_thumbnail);
+            Picasso.with(container.getContext()).load(recipeStep.getThumbnailURL()).into(imageView);
+
+        } else{
+            noImage = true;
+        }
+
+        defineViewsVisibility(rootView, noVideo, noImage);
         return rootView;
+    }
+
+    //try to build a URL using the String. If there is no exception, we know it's a valid URL
+    private boolean isUrl(String videoThumbUrl) {
+        URL url;
+
+        Uri.Builder UriBuilder = Uri.parse(videoThumbUrl).buildUpon();
+        Uri builtUri = UriBuilder.build();
+
+        try {
+            url = new URL(builtUri.toString());
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+        return true;
+    }
+
+    private boolean isUrlOfVideo(String url) {
+
+        url = url.toLowerCase();
+        return (url.endsWith(".mp4")) ||
+                (url.endsWith(".mpg")) ||
+                (url.endsWith(".3gp"));
+    }
+
+    private boolean isUrlOfImage(String url) {
+
+        url = url.toLowerCase();
+        return (url.endsWith(".jpg")) ||
+                (url.endsWith(".gif")) ||
+                (url.endsWith(".png"));
+
     }
 
     //Defines the Visibility of tv_step_description, button_previous_step and button_next_step
 
-    private void defineViewsVisibility(View rootView, boolean noVideo){
+    private void defineViewsVisibility(View rootView, boolean noVideo, boolean noImage){
         //if in Landscape and not in two-Pane-mode, video will play in fullscreen
         // so there is no need to display the textview
         TextView textViewStepDescription = rootView.findViewById(R.id.tv_step_description);
         Button buttonPrevStep = rootView.findViewById(R.id.button_previous_step);
         Button buttonNextStep = rootView.findViewById(R.id.button_next_step);
+
+        if(noImage) {
+            ImageView imageView = rootView.findViewById(R.id.iv_recipe_thumbnail);
+            imageView.setVisibility(View.GONE);
+        }
+        if(noVideo)
+            mPlayerView.setVisibility(View.GONE);
+
 
         if ((getResources().getConfiguration().orientation == ORIENTATION_LANDSCAPE) &&
                 (!noVideo) && (!MainActivity.mTwoPaneMode)) {

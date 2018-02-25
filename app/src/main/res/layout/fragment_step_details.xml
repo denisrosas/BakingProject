@@ -15,6 +15,13 @@
         android:layout_width="match_parent"
         android:background="@android:color/darker_gray" />
 
+    <ImageView
+        android:id="@+id/iv_recipe_thumbnail"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_gravity="center_horizontal"
+        android:contentDescription="@string/recipe_thumbnail_description" />
+
     <TextView
         android:id="@+id/tv_step_description"
         android:layout_width="match_parent"
@@ -30,7 +37,7 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        
+
         <Button
             android:layout_margin="5dp"
             android:id="@+id/button_previous_step"
@@ -48,7 +55,7 @@
             android:layout_weight="1"
             android:text="@string/next_step"
             android:layout_gravity="end" />
-        
+
     </LinearLayout>
 
 </LinearLayout>

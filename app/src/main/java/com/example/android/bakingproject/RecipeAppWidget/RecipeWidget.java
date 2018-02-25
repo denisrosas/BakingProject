@@ -1,4 +1,4 @@
-package com.example.android.bakingproject;
+package com.example.android.bakingproject.RecipeAppWidget;
 
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
@@ -10,7 +10,10 @@ import android.net.Uri;
 import android.util.Log;
 import android.widget.RemoteViews;
 
-import com.example.android.bakingproject.RecipeAppWidget.AppWidgetService;
+import com.example.android.bakingproject.MainActivity;
+import com.example.android.bakingproject.R;
+import com.example.android.bakingproject.RecipeIngredientsListActivity;
+import com.example.android.bakingproject.RecipeStepsListActivity;
 
 import java.util.ArrayList;
 
@@ -63,15 +66,14 @@ public class RecipeWidget extends AppWidgetProvider {
         views.setOnClickPendingIntent(R.id.tv_recipe_name_widget, pendingIntent);
         views.setTextViewText(R.id.tv_recipe_name_widget, recipe_name);
 
+        //Set ListView of Ingredients list an Adapter
         Intent lvAdapterIntent = new Intent(context, AppWidgetService.class);
+        lvAdapterIntent.putExtra(RECIPE_ID, recipe_id);
         lvAdapterIntent.setData(Uri.parse(lvAdapterIntent.toUri(Intent.URI_INTENT_SCHEME)));
         views.setRemoteAdapter(R.id.lv_widget_ingredient_list, lvAdapterIntent);
-        views.setOnClickPendingIntent(R.id.lv_widget_ingredient_list, pendingIntent);
-
-//        views.setOnClickPendingIntent(R.id.tv_ingredients_list_widget, pendingIntent);
-//        views.setTextViewText(R.id.tv_ingredients_list_widget, getIngredientList(recipe_id));
 
         appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetId, R.id.ll_widget_container);
+        appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetId, R.id.lv_widget_ingredient_list);
         appWidgetManager.updateAppWidget(appWidgetId, views);
 
     }

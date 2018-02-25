@@ -107,9 +107,6 @@ public class RecipeStepDetailsFragment extends Fragment implements ExoPlayer.Eve
         if((isUrl(recipeStep.getVideoURL()))&&(isUrlOfVideo(recipeStep.getVideoURL()))) {
             initializePlayer(Uri.parse(recipeStep.getVideoURL()));
         }
-        else if ((isUrl(recipeStep.getThumbnailURL()))&&(isUrlOfVideo(recipeStep.getThumbnailURL()))) {
-            initializePlayer(Uri.parse(recipeStep.getThumbnailURL()));
-        }
         else {
             noVideo = true;
             Log.i("denis","No Video Found in this step. Exoplayer View will be hidden.");

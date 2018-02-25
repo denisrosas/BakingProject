@@ -130,7 +130,7 @@ public class RecipeStepDetailsFragment extends Fragment implements ExoPlayer.Eve
     }
 
     //try to build a URL using the String. If there is no exception, we know it's a valid URL
-    private boolean isUrl(String videoThumbUrl) {
+    public static boolean isUrl(String videoThumbUrl) {
         URL url;
 
         Uri.Builder UriBuilder = Uri.parse(videoThumbUrl).buildUpon();
@@ -146,7 +146,7 @@ public class RecipeStepDetailsFragment extends Fragment implements ExoPlayer.Eve
         return true;
     }
 
-    private boolean isUrlOfVideo(String url) {
+    public static boolean isUrlOfVideo(String url) {
 
         url = url.toLowerCase();
         return (url.endsWith(".mp4")) ||
@@ -154,7 +154,7 @@ public class RecipeStepDetailsFragment extends Fragment implements ExoPlayer.Eve
                 (url.endsWith(".3gp"));
     }
 
-    private boolean isUrlOfImage(String url) {
+    public static boolean isUrlOfImage(String url) {
 
         url = url.toLowerCase();
         return (url.endsWith(".jpg")) ||

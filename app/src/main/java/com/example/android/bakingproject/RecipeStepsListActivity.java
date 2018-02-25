@@ -38,6 +38,7 @@ public class RecipeStepsListActivity extends AppCompatActivity implements Recipe
             //adding the steps list fragment
             RecipeStepsFragment recipeStepsFragment = new RecipeStepsFragment();
             recipeStepsFragment.setRecipeName(globalRecipeDetailsList.get(recipeId).getName());
+            recipeStepsFragment.setImagePath(globalRecipeDetailsList.get(recipeId).getImage());
             recipeStepsFragment.setRecipeStepNames(getStepListFromGlobal(recipeId));
 
             FragmentManager fragmentManager = getSupportFragmentManager();

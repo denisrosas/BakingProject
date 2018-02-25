@@ -9,9 +9,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.android.bakingproject.R;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -21,14 +23,19 @@ import butterknife.ButterKnife;
 public class RecipeStepsFragment extends Fragment {
 
     static final String RECIPE_NAME = "RECIPE_NAME";
+    static final String IMAGE_PATH = "IMAGE_PATH";
     static final String RECIPE_STEP_NAMES = "RECIPE_STEP_NAMES";
     static final String RECYCLERVIEW_SCROL_STATE = "RECYCLERVIEW_SCROL_STATE";
 
     ArrayList<String> recipeStepNames = new ArrayList<>();
     private String recipeName;
+    private String imagePath;
 
     @BindView(R.id.rv_recipe_steps_list)
     RecyclerView recyclerView;
+
+    @BindView(R.id.iv_recipe_image)
+    ImageView recipeImageView;
 
 
     public RecipeStepsFragment(){  //empty constructor
@@ -42,6 +49,11 @@ public class RecipeStepsFragment extends Fragment {
         recipeStepNames = recipeStepNames1;
     }
 
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
+    }
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -53,12 +65,20 @@ public class RecipeStepsFragment extends Fragment {
 
         if(savedInstanceState!=null){
             recipeName = savedInstanceState.getString(RECIPE_NAME);
+            imagePath = savedInstanceState.getString(IMAGE_PATH);
             recipeStepNames = savedInstanceState.getStringArrayList(RECIPE_STEP_NAMES);
         }
 
         View rootView = inflater.inflate(R.layout.fragment_steps_list, container, false);
 
         ButterKnife.bind(this, rootView);
+
+        //
+        if(RecipeStepDetailsFragment.isUrl(imagePath)&&(RecipeStepDetailsFragment.isUrlOfImage(imagePath))) {
+            Picasso.with(container.getContext()).load(imagePath).into(recipeImageView);
+        } else{
+            recipeImageView.setVisibility(View.GONE);
+        }
 
         TextView textViewRecipeName = rootView.findViewById(R.id.tv_recipe_name);
         textViewRecipeName.setText(recipeName);
@@ -80,6 +100,7 @@ public class RecipeStepsFragment extends Fragment {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putString(RECIPE_NAME, recipeName);
+        outState.putString(IMAGE_PATH, imagePath);
         outState.putStringArrayList(RECIPE_STEP_NAMES, recipeStepNames);
         outState.putParcelable(RECYCLERVIEW_SCROL_STATE, recyclerView.getLayoutManager().onSaveInstanceState());
 
